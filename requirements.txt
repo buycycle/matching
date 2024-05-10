@@ -1,0 +1,34 @@
+pytest
+mypy
+
+fastapi
+pydantic
+uvicorn
+httpx
+
+gunicorn
+
+werkzeug
+
+# oscryto manual fix for snowflake
+https://github.com/wbond/oscrypto/archive/d5f3437ed24257895ae1edd9e503cfb352e635a8.zip
+
+pymysql
+pandas
+numpy
+configparser
+sqlalchemy
+snowflake-sqlalchemy
+
+
+# common ML functions and logging
+git+https://gitlab.com/rauner/buycycle.git@main#egg=buycycle
+category_encoders
+boto3
+
+
+# linting
+flake8
+black
+pylint
+
