@@ -5,6 +5,8 @@ target = "status"
 categorical_features = [
     "template_id",
     #    "city",
+    "bike_created_at_year",
+    "bike_year",
     "brake_type_code",
     "frame_material_code",
     "shifting_code",
@@ -29,8 +31,6 @@ numerical_features = [
     "msrp",
     "sales_price",
     "bike_created_at_month",
-    "bike_created_at_year",
-    "bike_year",
     "rider_height_min",
     "rider_height_max",
     "up_duration",
@@ -135,6 +135,7 @@ main_query = """
 
 
                 WHERE bikes.status = 'sold' or bikes.status = 'deleted' or bikes.status = 'active'
+                LIMIT 10000
 
 
              """

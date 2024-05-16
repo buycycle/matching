@@ -1,10 +1,16 @@
-from src.data import *
-
-from src.driver import *
-from src.matching import *
+import os
+import numpy as np
+import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-
+from src.data import *
+from src.driver import *
+from src.matching import *
+from xgboost import XGBClassifier
+# Create the /plot directory if it doesn't exist
+if not os.path.exists('plot'):
+    os.makedirs('plot')
+# Data preparation
 X_train, X_test, y_train, y_test = create_data(
     query=main_query,
     query_dtype="",
@@ -12,23 +18,18 @@ X_train, X_test, y_train, y_test = create_data(
     categorical_features=categorical_features,
     target="status",
 )
-
 X_train_transformed, X_test_transformed, data_transform_pipeline = fit_transform(
     X_train, X_test, categorical_features, numerical_features
 )
-
 y_train_transformed, y_test_transformed, labelencoder = encode_target(y_train, y_test)
-
-
+# Model training
 classifier = train(X_train_transformed, y_train_transformed, model=XGBClassifier)
-
-
+# Prediction
 probs = predict_probabilities(X_test_transformed, classifier)
-
+# Test probability
 test_probability(X_test_transformed, y_test_transformed, classifier, labelencoder)
-
+# Feature importances
 feature_names = [f"Feature {i+1}" for i in range(X_train_transformed.shape[1])]
-
 importances = classifier.feature_importances_
 # Sort the feature importances in descending order and get the indices
 indices = np.argsort(importances)[::-1]
@@ -44,12 +45,11 @@ plt.bar(range(10), importances[top_indices], color="lightblue", align="center")
 plt.xticks(range(10), sorted_feature_names, rotation=45)
 plt.xlim([-1, 10])
 plt.tight_layout()
-plt.show()
-
+plt.savefig('plot/top_10_feature_importances.png')
 # Assuming X_train and y_train are your features and target variable respectively
 # and that y_train is a categorical variable with the categories you want to analyze
 # Convert the categorical target variable into a DataFrame with binary columns
-y_train_binary = pd.get_dummies(y_train)
+y_train_binary = pd.get_dummies(y_train, dtype=int)
 # Combine the features and binary target columns
 combined_data = pd.concat([X_train, y_train_binary], axis=1)
 # Calculate the correlation matrix
@@ -61,7 +61,6 @@ for category in y_train_binary.columns:
     if category in correlation_matrix.columns:
         # Select the correlations between features and the binary target
         category_correlations = correlation_matrix[category].drop(y_train_binary.columns)
-
         # Create a bar plot for the correlations
         plt.figure(figsize=(8, 6))
         category_correlations.sort_values().plot(kind='barh')
@@ -69,6 +68,7 @@ for category in y_train_binary.columns:
         plt.xlabel('Correlation')
         plt.ylabel('Features')
         plt.tight_layout()
-        plt.show()
+        plt.savefig(f'plot/feature_correlations_with_{category}.png')
     else:
         print(f"Category '{category}' not found in correlation matrix.")
+
