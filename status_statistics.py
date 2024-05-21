@@ -35,6 +35,7 @@ for status, group in status_groups:
 train_data = pd.concat([X_train, y_train], axis=1)
 # Select only numerical features for the pairplot
 numerical_data = train_data.select_dtypes(include=['float64']).join(train_data['status'])
+numerical_data - numerical_data + "bike_created_at_month"
 # Create a pairplot with hue set to 'status'
 pairplot_fig = sns.pairplot(numerical_data, hue='status', plot_kws={'alpha': 0.5})
 # Save the pairplot to a file

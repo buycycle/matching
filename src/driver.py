@@ -137,7 +137,6 @@ main_query = """
 
 
                 WHERE bikes.status = 'sold' or bikes.status = 'deleted' or bikes.status = 'active'
-                LIMIT 10000
 
 
              """
