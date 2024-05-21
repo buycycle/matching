@@ -4,7 +4,7 @@ target = "status"
 
 categorical_features = [
     "template_id",
-    #    "city",
+    "city",
     "bike_created_at_year",
     "bike_year",
     "brake_type_code",
@@ -22,7 +22,7 @@ categorical_features = [
     "brand_id",
     "color",
     #    "currency_id",
-    #    "seller_id",
+    "seller_id",
     "is_ebike",
     "is_frameset",
 ]
@@ -74,6 +74,8 @@ main_query = """
                 -- spatial
 
                 bikes.country_id as sales_country_id,
+                bikes.seller_id as seller_id,
+                bikes.city as city,
 
                 -- categorizing
                 bikes.bike_type_id as bike_type_id,

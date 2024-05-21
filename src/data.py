@@ -67,6 +67,17 @@ def clean_data(
     # remove custom template idf and where target = NA
     df = df.loc[~df.index.duplicated(keep="last")]
     df.dropna(inplace=True)
+
+    # Remove outliers from numerical features
+    for feature in numerical_features:
+        Q1 = df[feature].quantile(0.25)
+        Q3 = df[feature].quantile(0.75)
+        IQR = Q3 - Q1
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 + 1.5 * IQR
+        # Filter out the outliers
+        df = df[(df[feature] >= lower_bound) & (df[feature] <= upper_bound)]
+
     return df
 
 
